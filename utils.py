@@ -7,7 +7,6 @@ import tensorflow as tf
 import tensorflow.contrib.slim as slim
 import PIL.Image
 from scipy import ndimage
-import pickle
 
 from typing import Any, List, Tuple, Union
 
@@ -223,16 +222,6 @@ class Logger(object):
 
         if self.file is not None:
             self.file.close()
-
-
-def load_pkl(file):
-    with open(file, 'rb') as f:
-        return pickle.load(f, encoding='latin1')
-
-
-def save_pkl(obj, filename):
-    with open(filename, 'wb') as file:
-        pickle.dump(obj, file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 ##################################################################################
