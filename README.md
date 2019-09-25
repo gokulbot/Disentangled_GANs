@@ -37,7 +37,7 @@ cd scripts
 bash train_falcor3d_fc.sh
 ```
 
-Note that in each script, `labels_keep_rate` represents the *label mask* $\alpha$ in the paper and `cond_weight` denotes 
+Note that in each script, `labels_keep_rate` represents the *fraction of labelled data* $\alpha$ in the paper and `cond_weight` denotes 
 the *disentanglement coefficient* $\gamma$.
 
 * To quickly evaluate the trained models, you can simply replace `--phase train` by `--phase eval` 
