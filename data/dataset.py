@@ -292,87 +292,6 @@ class FFHQ(GroundTruthData):
 
 
 # ---------------------------------------------------------------------
-class pinkroom(GroundTruthData):
-    """pinkroom dataset.
-
-    The data set is created for supervised disentanglement - with the dataset name:
-    - images: 'resized_pink_room_camera4_train/images/xxxxxx.png'
-    - labels: 'resized_pink_room_camera4_train/train-rpt.labels'
-
-    The ground-truth factors of variation are (in the default setting):
-    0 - lighting intensity (5 different values)
-    1 - lighting direction phi (10 different values)
-    2 - lighting direction theta (10 different values)
-    3 - camera position x (8 different values)
-    4 - camera position y (8 different values)
-    5 - camera position z (8 different values)
-    """
-
-    def __init__(self, data_path, labels_fine_list=[], labels_coarse_list=[]):
-        # By default, all factors (including shape) are considered ground truth factors.
-        self.labels_fine_list = labels_fine_list
-        self.labels_coarse_list = labels_coarse_list
-        self.latent_factor_indices = self.labels_fine_list + self.labels_coarse_list
-
-        self.fine_factor_indices = [0, 1, 2]
-        self.coarse_factor_indices = [3, 4, 5]
-        if not set(self.labels_fine_list).issubset(set(self.fine_factor_indices)):
-            print("[warning]: labels_fine_list is not a subset of fine ground-truth list")
-        if not set(self.labels_coarse_list).issubset(set(self.coarse_factor_indices)):
-            print("[warning]: labels_coarse_list is not a subset of coarse ground-truth list")
-
-        self.data_shape = [1024, 1024, 3]
-        # Load the data so that we can sample from it.
-        pinkroom_dir = os.path.join(data_path, 'resized_pink_room_camera4_train')
-        self.images = sorted(glob.glob(os.path.join(pinkroom_dir, 'images', '*.png')))
-
-        self.labels = np.load(os.path.join(pinkroom_dir, 'train-rpt.labels'))
-        self.factor_sizes = [5, 10, 10, 8, 8, 8]
-        self.factor_bases = np.prod(self.factor_sizes) / np.cumprod(self.factor_sizes)
-        self.state_space = SplitDiscreteStateSpace(self.factor_sizes, self.latent_factor_indices)
-
-        self.labels_mask = np.random.uniform(0., 1., size=len(self.images))  # for semi-supervised learning
-
-    @property
-    def num_samples(self):
-        assert isinstance(self.images, list)
-        return len(self.images)
-
-    @property
-    def num_factors(self):
-        return self.state_space.num_latent_factors
-
-    @property
-    def factors_num_values(self):
-        return [self.factor_sizes[i] for i in self.latent_factor_indices]
-
-    @property
-    def observation_shape(self):
-        """It is because we use image filenames"""
-        return []
-
-    def sample_factors(self, num, random_state):
-        """Sample a batch of factors Y."""
-        latent_factors = self.state_space.sample_latent_factors(num, random_state)
-        return latent_factors
-
-    def sample_observations_from_factors(self, latent_factors, random_state):
-        """Sample a batch of observations X given a batch of factors Y."""
-        all_factors = self.state_space.sample_all_factors(latent_factors, random_state)
-        indices = np.array(np.dot(all_factors, self.factor_bases), dtype=np.int64)
-        assert indices.ndim == 1, indices
-        all_labels = self.labels[indices].astype(np.float32)
-        labels = all_labels[:, self.latent_factor_indices]
-        images = np.array([self.images[index] for index in indices], dtype=str)
-
-        labels_mask = self.labels_mask[indices]
-        assert labels_mask.ndim == 1 and labels_mask.shape[0] == images.shape[0]
-        return images, labels, labels_mask
-
-    def _sample_factor(self, i, num, random_state):
-        return random_state.randint(self.factor_sizes[i], size=num)
-
-# ---------------------------------------------------------------------
 class Isaac3D(GroundTruthData):
     """pinkroom dataset.
 
@@ -463,8 +382,8 @@ class Falcor3D(GroundTruthData):
     """pinkroom dataset.
 
     The data set is created for supervised disentanglement - with the dataset name:
-    - images: 'resized_pink_room_camera5_train/images/xxxxxx.png'
-    - labels: 'resized_pink_room_camera5_train/train-rec.labels'
+    - images: 'resized_pink_room_camera7_train/images/xxxxxx.png'
+    - labels: 'resized_pink_room_camera7_train/train-rec.labels'
 
     The ground-truth factors of variation are (in the default setting):
     0 - lighting intensity (5 different values)
@@ -476,12 +395,11 @@ class Falcor3D(GroundTruthData):
     6 - camera position z_c (6 different values)
     """
 
-    def __init__(self, data_path, labels_fine_list=[], labels_coarse_list=[], data_id=5):
+    def __init__(self, data_path, labels_fine_list=[], labels_coarse_list=[]):
         # By default, all factors (including shape) are considered ground truth factors.
         self.labels_fine_list = labels_fine_list
         self.labels_coarse_list = labels_coarse_list
         self.latent_factor_indices = self.labels_fine_list + self.labels_coarse_list
-        self.data_id = data_id
 
         self.fine_factor_indices = [0, 1, 2, 3]
         self.coarse_factor_indices = [4, 5, 6]
@@ -490,13 +408,10 @@ class Falcor3D(GroundTruthData):
         if not set(self.labels_coarse_list).issubset(set(self.coarse_factor_indices)):
             print("[warning]: labels_coarse_list is not a subset of coarse ground-truth list")
 
-        if self.data_id == 7:
-            self.data_shape = [1024, 1024, 3]
-        else:
-            self.data_shape = [512, 512, 3]
+        self.data_shape = [1024, 1024, 3]
 
         # Load the data so that we can sample from it.
-        pinkroom_dir = os.path.join(data_path, 'resized_pink_room_camera{}_train'.format(self.data_id))
+        pinkroom_dir = os.path.join(data_path, 'resized_pink_room_camera7_train')
         self.images = sorted(glob.glob(os.path.join(pinkroom_dir, 'images', '*.png')))
 
         self.labels = np.load(os.path.join(pinkroom_dir, 'train-rec.labels'))
@@ -554,15 +469,9 @@ def get_named_ground_truth_data(data_path, labels_fine_list, labels_coarse_list,
         return DSprites(data_path, labels_fine_list, labels_coarse_list)
     elif name == 'ffhq':
         return FFHQ(data_path, labels_fine_list, labels_coarse_list)
-    elif name == 'pinkroom':
-        return pinkroom(data_path, labels_fine_list, labels_coarse_list)
     elif name == 'isaac3d':
         return Isaac3D(data_path, labels_fine_list, labels_coarse_list)
-    elif name == 'falcor3d_5':
-        return Falcor3D(data_path, labels_fine_list, labels_coarse_list, data_id=5)
-    elif name == 'falcor3d_6':
-        return Falcor3D(data_path, labels_fine_list, labels_coarse_list, data_id=6)
-    elif name == 'falcor3d_7':
-        return Falcor3D(data_path, labels_fine_list, labels_coarse_list, data_id=7)
+    elif name == 'falcor3d':
+        return Falcor3D(data_path, labels_fine_list, labels_coarse_list)
     else:
         raise ValueError("Invalid data set name.")

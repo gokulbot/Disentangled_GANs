@@ -43,7 +43,6 @@ def parse_args():
     parser.add_argument('--MIG', type=str2bool, default=True, help='if using the metric MIG')
     parser.add_argument('--L2', type=str2bool, default=True, help='if using the metric L2')
 
-    # parser.add_argument('--start_res', type=int, default=8, help='The number of starting resolution')
     parser.add_argument('--img_size', type=int, default=1024, help='The target size of image')
     parser.add_argument('--num_channels', type=int, default=3, help='The number of image channels')
     parser.add_argument('--test_num', type=int, default=16, help='The number of generating images in the test phase')
@@ -101,7 +100,7 @@ def main():
             print(" [*] Test finished!")
 
         if args.phase == 'eval':
-            gan.eval_disentanglement()  # TODO: add resume_snapshot
+            gan.eval_disentanglement()
             print(" [*] Test finished!")
 
         if args.phase == 'draw':
