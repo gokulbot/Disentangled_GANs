@@ -1000,7 +1000,7 @@ class StyleGAN(object):
                 resume_snapshot=self.resume_snapshot, num_save=num_save)
             labels_inf_vars_mean_dict['factor{}'.format(labels_list[index])] = labels_inf_vars_mean
             labels_inf_diffs_mean_dict['factor{}'.format(labels_list[index])] = labels_inf_diffs_mean
-        print('labels_inf_diffs_mean_dict: ', labels_inf_vars_mean_dict)
+        print('labels_inf_vars_mean_dict: ', labels_inf_vars_mean_dict)
         print('labels_inf_diffs_mean_dict: ', labels_inf_diffs_mean_dict)
 
         # randomize latent z
@@ -1031,19 +1031,6 @@ class StyleGAN(object):
             # randomize latent z
             randomize_latent(self.generate_with_control, images_test, labels_in_np, z_np, eval_est_dir,
                              resume_snapshot=self.resume_snapshot)
-
-    def calculate_interpolation_variance(self):
-        tf.global_variables_initializer().run()
-
-        self.saver = tf.train.Saver()
-        could_load, checkpoint_counter = self.load(self.checkpoint_dir, self.resume_snapshot)
-
-        if could_load:
-            print(" [*] Load SUCCESS")
-        else:
-            print(" [!] Load failed...")
-
-
 
     def draw_uncurated_result_figure(self):
         tf.global_variables_initializer().run()
