@@ -14,7 +14,8 @@ The above requirements are basically kept the same with those in the original St
 
 ## Instructions
 The `scripts` folders contain scripts for starting the different experiments.
-For example, to reproduce the `AC-StyleGAN on Isaac3D` experiments, you can try:
+
+To reproduce the `AC-StyleGAN on Isaac3D` experiments, you can try:
 ```
 cd scripts
 bash train_isaac3d_ac.sh
@@ -24,7 +25,8 @@ or the `FC-StyleGAN on Isaac3D` experiments:
 cd scripts
 bash train_isaac3d_fc.sh
 ```
-Similarly, you can reproduce the `AC-StyleGAN on Falcor3D` experiments, you can try:
+
+Similarly, to reproduce the `AC-StyleGAN on Falcor3D` experiments, you can try:
 ```
 cd scripts
 bash train_falcor3d_ac.sh
@@ -35,3 +37,5 @@ cd scripts
 bash train_falcor3d_fc.sh
 ```
 
+To quickly evaluate the trained models, you can simply replace `--phase train` by `--phase eval` 
+in each `train_xxxxxxx_xx.sh` and then do the command `bash train_xxxxxxx_xx.sh`.
