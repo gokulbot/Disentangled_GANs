@@ -15,7 +15,7 @@ The above requirements are basically kept the same with those in the original St
 ## Instructions
 The `scripts` folders contain scripts for starting the different experiments.
 
-To reproduce the `AC-StyleGAN on Isaac3D` experiments, you can try:
+* To reproduce the `AC-StyleGAN on Isaac3D` experiments, you can try:
 ```
 cd scripts
 bash train_isaac3d_ac.sh
@@ -26,7 +26,7 @@ cd scripts
 bash train_isaac3d_fc.sh
 ```
 
-Similarly, to reproduce the `AC-StyleGAN on Falcor3D` experiments, you can try:
+* Similarly, to reproduce the `AC-StyleGAN on Falcor3D` experiments, you can try:
 ```
 cd scripts
 bash train_falcor3d_ac.sh
@@ -37,5 +37,8 @@ cd scripts
 bash train_falcor3d_fc.sh
 ```
 
-To quickly evaluate the trained models, you can simply replace `--phase train` by `--phase eval` 
-in each `train_xxxxxxx_xx.sh` and then do the command `bash train_xxxxxxx_xx.sh`.
+Note that in each script, `labels_keep_rate` represents the *label mask* $\alpha$ in the paper and `cond_weight` denotes 
+the *disentanglement coefficient* $\gamma$.
+
+* To quickly evaluate the trained models, you can simply replace `--phase train` by `--phase eval` 
+in each `train_xxxxxxx_xx.sh` and then run the command `bash train_xxxxxxx_xx.sh`.
